@@ -1,0 +1,256 @@
+<ARTICLE ID="Article_1">
+	<HEADER ID="Header_Article_1">
+		<H2>Lifelines: Breathalyzer Build Instructions</H2>
+		<H3>By: Ryan Do</H3>
+	</HEADER>
+ 
+	<SECTION ID="Introduction">
+		<H2>Introduction</H2>
+		<p>Welcome to my build instuctions for the Lifelines: Breathalyzer. This page will give you instructions and help you to build your 
+		very own breathalyzer. This is an IoT project that my project members, Eugene Oliver, Adriene Almacen and I decided do. By doing this
+		project, we aim to provide a portable breathalyzer that you can make yourself to help combat drunk driving and the accidents caused by
+		it. When people are drunk, some decide that they aren't as bad as it really is, and think its okay to drive home. By using this, users
+		can see what their blood alcohol level is and are given alternative options depending if they are over the limit or not. Users can also
+		measure their heart rate with the heartrate sensor.</p>
+		<p><img src="../images/system-diagram.png" alt="diagram" style="width:800px;height:400px;"></p>
+	</SECTION>
+ 
+   <SECTION ID="Budget">
+		<H2>Bill of Materials/Budget</H2>
+		<p>Below is a list of the materials I used for this project. Please note that for the Raspberry Pi and Humber Parts Kit, you don't need 
+		to get the whole kit like I did. You can choose the basic kit or buy the Raspberry Pi, SD card, and case separately at a much lower cost.
+		For the PCB Kit, it paid as part of my tuition, but the parts are there and estimated at around $40. Alternatively, you could just buy
+		an Analog to Digital converter like the MCP3008 - 8-Channel 10-Bit ADC.</p>
+		<table>
+			<tr>
+				<th>Item</th>
+				<th>Qty.</th>
+				<th>Cost</th>
+				<th>Supplier/Part Number</th>
+			</tr>
+			<tr>
+				<td>CanaKit Raspberry Pi 3 Ultimate Starter Kit</td>
+				<td>1</td>
+				<td>$119.99</td>
+				<td>Amazon.ca - B01CCF9BYG</td>
+			</tr>
+			<tr>
+				<td>OSEPP MQ-3 Alcohol Gas Sensor</td>
+				<td>1</td>
+				<td>$11.95</td>
+				<td>Amazon.ca - B01ISMV6G8</td>
+			</tr>
+			<tr>
+				<td>Sparkykit XD-58C Heart Rate Sensor</td>
+				<td>1</td>
+				<td>$18.99</td>
+				<td>Amazon.ca - B01AUVMFIS</td>
+			</tr>
+			<tr>
+				<td>Humber Electronics Parts Kit</td>
+				<td>1</td>
+				<td>$119.99</td>
+				<td>Humber College</td>
+			</tr>
+			<tr>
+				<td>PCB Kit
+					<ul>
+						<li>PCB Board</li>
+						<li>Resistors</li>
+						<li>Capacitors</li>
+						<li>Solder</li>
+						<li>LED</li>
+						<li>Transistors</li>
+						<li>PCF8591 - 8 BIT I2C ADC & DAC</li>
+					</ul>
+				</td>
+				<td>1</td>
+				<td>~$40.00</td>
+				<td>Humber College</td>
+			</tr>
+			<tr>
+				<td>Soldering Iron</td>
+				<td>1</td>
+				<td>~$20.00</td>
+				<td>Humber College</td>
+			</tr>
+			<tr>
+				<td><b>Total Cost:</b></td>
+				<td></td>
+				<td><b>$330.93</b></td>
+				<td></td>
+			</tr>
+		</table>
+	</SECTION>
+ 
+	<SECTION ID="Time">
+		<H2>Time Commitment</H2>
+		<p>Since this project was done for my 5th semster Computer Engineering Technology program, the whole project was complated in about 15 weeks
+		due to other courses and projects during the year. Below is a break down of how long each part of the project took me. The project is
+		going to take you a lot less time as I have given you set instructions in this build log to follow.</p>
+		<table>
+			<tr>
+				<th>Task</th>
+				<th>Approximate Time Taken</th>
+			</tr>
+			<tr>
+				<td>Searching and ordering parts</td>
+				<td>1 hour</td>
+			</tr>
+			<tr>
+				<td>Delivery of parts</td>
+				<td>2 weeks</td>
+			</tr>
+			<tr>
+				<td>Setting up/updating the Raspberry Pi</td>
+				<td>2 hours</td>
+			</tr>
+			<tr>
+				<td>Soldering the custom PCB</td>
+				<td>1 hour</td>
+			</tr>
+			<tr>
+				<td>Testing for shorts/troubleshooting the PCB</td>
+				<td>3 hours</td>
+			</tr>
+			<tr>
+				<td>Writing the code to get readings from the sensors</td>
+				<td>2 hours</td>
+			</tr>
+			<tr>
+				<td>Testing/calibrating the sensors </td>
+				<td>2 hours</td>
+			</tr>
+			<tr>
+				<td>Project setup/power up</td>
+				<td>5 minutes</td>
+			</tr>	  
+		</table>
+	</SECTION>
+
+	<SECTION ID="RPI_Setup">
+		<H2>Raspberry Pi Setup</H2>
+		<p>To setup your Raspberry Pi, you will need:
+			<UL>
+				<LI>A Computer</LI>
+				<LI>Micro SD Card Reader</LI>
+				<LI>Rasbperry Pi</LI>
+				<LI>Power Cable</LI>
+				<LI>Monitor</LI>
+				<LI>HDMI Cable</LI>
+				<LI>8GB Micro SD Card</LI>
+				<LI>USB Keyboard/Mouse</LI>
+			</UL>
+		Start by plugging in your micro SD card to your computer and downloading NOOBS from <a href="https://www.raspberrypi.org/downloads/noobs/">here</a>.
+		Format your micro SD card as FAT and extract the contents of the ZIP file to the root directory of your SD card. After thats done, remove the micro
+		SD card from your computer and insert it into your Raspberry Pi. Connect your Pi to monitor using an HDMI cable, then connect the USB mouse and keyboard. 
+		On the first boot, NOOBS will ask you which OS to install, it's best to choose Raspbian. After it is done installing and has successfully booted,
+		connect it to the internet either by ethernet or WiFi. Open up the terminal and run the following command:
+		<pre><code>sudo apt-get update</code></pre>
+		This will make sure your Rasperry Pi is updated to the latest version and patch any security holes. Next run:
+		<pre><code>sudo raspi-config</code></pre>
+		This will show a menu where you can configure your Pi. Use the arrow keys to go down and select "Advanced Options", then go down to I2C and enable it.
+		Now, your Raspberry Pi should be set up and ready to go to the next step.</p>
+	</SECTION>
+	
+	<SECTION ID="PCB">
+		<H2>PCB/Soldering</H2>
+		<p>The PCB was provided by Humber College which includes an Analog to Digital Converter and a Real Time Clock which works with the Rasperry Pi.
+		Below I have included the link to download the EAGLE PCB Design sotware and the schematic and board files for the PCB. The PCB contains: 
+			<UL>
+				<LI>2x Bipolar Junction Transistors</LI>
+				<LI>1x LED</LI>
+				<LI>1x 40 Pin GPIO Header</LI>
+				<LI>1x 1K Ohm Resistor</LI>
+				<LI>2x 3.9K Ohm Resistors</LI>
+				<LI>2x 4.7K Ohm Resistors</LI>
+				<LI>4x 100nF Capacitors</LI>
+				<LI>2x 4 Pin Headers</LI>
+				<LI>1x 5 Pin Header</LI>
+			</UL>
+		If this is your first time soldering, here is a video on the basics of soldering. 
+		<a href="https://www.youtube.com/watch?v=BLfXXRfRIzY&list=PLQ32vZrF5U2lFOJTtZDytBWBYVLNp4RYz">Video</a></p>
+			<LI><a href="https://cadsoft.io/">EAGLE PCB Design</a></LI>
+			<LI><a href="../documents/HSHV4-student version.sch">Download Schematic File</a></LI>  
+			<LI><a href="../documents/HSHV4-student version.brd">Download Board File</a></LI>  
+		<p>Below is an image of the board file and the final PCB when it is all soldered.</p>
+		<p><img src="../images/board.png" alt="board" style="width:739px;height:762px;">
+		<p><img src="../images/PCB.jpg" alt="PCB" style="width:700px;height:575px;">
+   </SECTION>
+   
+   <SECTION ID="Assembly">
+		<H2>Mechanical Assembly</H2>
+		<p>After you have your PCB is all soldered and you have checked for shorts, now its time for assembly. With the Raspberry Pi off, connect the 
+		PCB you soldered to the GPIO headers on the Raspberry Pi. Take your PCF8591 - 8 BIT I2C ADC & DAC and plug it into the 4 pin header where it says ADC on the board.
+		Next, connect your MQ-3 alcohol gas sensor and heartrate sensor to VCC and ground and then the signal to AIN1 and AIN2 of the ADC.</p>
+	</SECTION>
+ 
+	<SECTION ID="Power">
+	<H2>Power Up</H2>
+		<p>Once everything is connected and wired properly, go ahead and power up and boot the Raspberry Pi. To check if the ADC is being detected, open up the terminal
+		and run the following code:
+		<pre><code>i2cdetect -y 1</code></pre>
+		You should see a table with the number 48 showing. If not, then there is something wrong with your PCB and you should recheck it and see where the problem is.
+		If everything is fine, you're ready to run the code to get data from the sensors. Below, I have included my python code to get the readings. Create a file
+		with a ".py" extension and edit it with a text editor. Copy the code below and open up the terminal. You can run the file by using the <code>python filename.py</code>
+		command. You should then see the readings come up on the screen in the terminal.</p>
+		
+		<pre><code>
+		#	Ryan Do - N01044391
+		#	November 21, 2016
+		#	Lifelines: Breathalyzer
+
+		import time
+		import RPi.GPIO as GPIO
+		GPIO.VERSION
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(11,GPIO.OUT)
+		GPIO.setup(12,GPIO.OUT)
+
+		from smbus import SMBus
+
+		bus = SMBus(1)
+
+		#read the sensors given the pin
+		def read_ain(i):    
+			global bus
+			bus.write_byte(0x48, i)
+			bus.read_byte(0x48)
+			bus.read_byte(0x48)
+			return bus.read_byte(0x48)
+
+		while(True):
+			alcohol = read_ain(2)*0.001		#read the alcohol sensor on pin 2
+			heartrate = read_ain(1)			#read the heartrate sensor on pin 1
+
+			print "-------------------------\n"
+			print("Alcohol Sensor: {0:.3f}%".format(alcohol))	#print alcohol reading
+			
+			#turn on the LED when alcohol level is above 0.08%
+			if(alcohol>0.08):
+			GPIO.output(11,0)
+			GPIO.output(12,1)
+			else:
+			GPIO.output(11,1)
+			GPIO.output(12,0)
+			
+			print("Heart Rate Sensor: {0:.0f} BPM\n".format(heartrate))		#print heartrate reading
+			time.sleep(1)#update every 1 second</code></pre>
+	</SECTION>
+
+	<SECTION ID="UnitProdTest">
+		<H2>Unit/Production Testing</H2>
+		<p>As there are only 2 sensors in this project, there's not a lot of unit testing to be done. You can comment out the heartrate code to test for alcohol levels and
+		vice versa. To get a reading from your alcohol sensor, you can either get drunk and blow on the sensor or get something that contains alcohol such as rubbing alcohol
+		or beer and put it near the sensor. You should start seeing the number rise and fall after you remove the alcohol. To test the heartrate sensor, simply put your thumb
+		on the light and wait for a few seconds. The reading should start showing a low number such as 11 or 12, and then jump up to your heartrate. After you let go, the
+		number should jump up above 200 and go back down. You can also change the value in which the LED turns on to a lower level to make sure that it works.</p>
+	</SECTION>
+ 
+	<SECTION ID="Conclusion">
+		<H2>Conclusion</H2>
+		<p>By following this guide, you should be able to successfully reproduce this project and have the sensors reading alcohol level and your heart rate. Everything
+		you need should be available to you on this page. You can visit my github repository <a href="https://github.com/rdoughboy/rdoughboy.github.io/">here</a> if you
+		want to take a look at the files.</p>
+	</SECTION>
+</ARTICLE>
